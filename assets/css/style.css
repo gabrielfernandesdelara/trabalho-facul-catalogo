@@ -106,6 +106,31 @@ h2,
   opacity: 0.7;
 }
 
+/* Botão cancelar gradiente igual editar/excluir */
+.btn-cancelar,
+.btn.btn-cancelar,
+a.btn-cancelar {
+  background: linear-gradient(90deg, #f72585 0%, #7209b7 100%) !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 2rem;
+  font-weight: 700;
+  padding: 0.6em 2em;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 12px rgba(114, 9, 183, 0.1);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  font-size: 1.1rem;
+  outline: none;
+}
+
+.btn-cancelar:hover,
+.btn-cancelar:focus {
+  background: linear-gradient(90deg, #7209b7 0%, #f72585 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 24px rgba(247, 37, 133, 0.18);
+  transform: translateY(-2px) scale(1.04);
+}
+
 /* Rodapé estilizado */
 footer {
   background: linear-gradient(90deg, #3a0ca3 60%, #7209b7 100%) !important;

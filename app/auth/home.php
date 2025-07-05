@@ -1,3 +1,8 @@
+<?php
+// Inicia a sessão para manter o login do usuário
+session_start();
+$usuario_nome = $_SESSION['usuario_nome'] ?? '';
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -16,7 +21,7 @@
 
 <body>
   <!-- Banner de boas-vindas com itens do menu -->
-  <div class="bg-light p-5 mb-4">
+  <div class="bg-light p-5 mb-4 position-relative">
     <div class="container">
       <div class="d-flex align-items-center justify-content-between flex-wrap">
         <div>
@@ -29,19 +34,27 @@
                 <a class="nav-link active text-primary fw-bold" href="#">Início</a>
               </li>
               <li>
-                <a class="nav-link active text-primary fw-bold" href="/trabalho-facul-catalogo/app/auth/produtos.php">Produtos</a>
+                <a class="nav-link active text-primary fw-bold"
+                  href="/trabalho-facul-catalogo/app/auth/produtos.php">Produtos</a>
               </li>
               <li>
-                <a class="nav-link active text-primary fw-bold" href="#">cadastro de produtos</a>
+                <a class="nav-link active text-primary fw-bold"
+                  href="/trabalho-facul-catalogo/app/auth/criar-produtos.php">Cadastro de produtos</a>
               </li>
               <li>
-                <a class="nav-link active text-primary fw-bold" href="#">cadastro de categorias</a>
+                <a class="nav-link active text-primary fw-bold"
+                  href="/trabalho-facul-catalogo/app/auth/criar-categorias.php">Cadastro de categorias</a>
               </li>
             </ul>
           </nav>
         </div>
         <img src="/trabalho-facul-catalogo/assets/img/Icon.png" alt="Banner" class="banner-img" />
       </div>
+      <?php if ($usuario_nome): ?>
+        <div class="position-absolute top-0 end-0 mt-3 me-4">
+          <span class="badge bg-primary fs-6 p-2">👤 <?php echo htmlspecialchars($usuario_nome); ?></span>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
   <!-- Seção de produtos em destaque -->
@@ -66,6 +79,7 @@
       <!-- Produto 2 -->
       <div class="col">
         <div class="cartao h-100 card">
+          <!-- Imagem do produto -->
           <img src="/trabalho-facul-catalogo/assets/img/Death Stranding 2.png" class="card-img-top" alt="Produto 2" />
           <div class="card-body">
             <h5 class="card-title">Death stranding 2 - PS5</h5>
@@ -81,6 +95,7 @@
       <!-- Produto 3 -->
       <div class="col">
         <div class="cartao h-100 card">
+          <!-- Imagem do produto -->
           <img src="/trabalho-facul-catalogo/assets/img/rtx 5090.png" class="card-img-top" alt="Produto 3" />
           <div class="card-body">
             <h5 class="card-title">Gigabyte Windforce RTX 5090</h5>

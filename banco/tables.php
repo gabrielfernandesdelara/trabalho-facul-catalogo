@@ -1,10 +1,13 @@
 <!-- para criar tabelas do bd -->
- <!-- tabelas de categorias e produtos -->
 <?php
+// Este arquivo cria as tabelas do banco de dados se elas ainda não existirem
+
 require_once __DIR__ . '/../banco/connect.php';
 
-$conn = conectarBanco(); // <-- Adicione esta linha
+// Faz a conexão com o banco de dados usando a função do connect.php
+$conn = conectarBanco();
 
+// Cria a tabela de categorias (cada produto pertence a uma categoria)
 $conn->query("CREATE TABLE IF NOT EXISTS categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -19,8 +22,10 @@ $conn->query("CREATE TABLE IF NOT EXISTS produtos (
     estoque INT NOT NULL,
     imagem VARCHAR(500),
     categoria_id INT,
+    usuario_id INT,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 )");
 
 $conn->query("CREATE TABLE IF NOT EXISTS usuarios (

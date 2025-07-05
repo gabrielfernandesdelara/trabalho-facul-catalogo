@@ -1,54 +1,62 @@
 <?php
+// Inicia a sessão para manter o login do usuário
 session_start();
 require_once __DIR__ . '/../../banco/connect.php';
-
+// Variável para mensagem de retorno
 $mensagem = "";
-
+// Verifica se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = trim($_POST['email'] ?? '');
-    $senha = $_POST['senha'] ?? '';
-
-    if ($email && $senha) {
-        $conn = conectarBanco();
-
-        $stmt = $conn->prepare("SELECT id, nome, senha FROM usuarios WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows === 1) {
-            $stmt->bind_result($id, $nome, $senhaHash);
-            $stmt->fetch();
-
-            if (password_verify($senha, $senhaHash)) {
-                $_SESSION['usuario_id'] = $id;
-                $_SESSION['usuario_nome'] = $nome;
-                header("Location: /trabalho-facul-catalogo/app/auth/home.php");
-                exit;
-            } else {
-                $mensagem = '<div class="alert alert-danger">Senha incorreta.</div>';
-            }
-        } else {
-            $mensagem = '<div class="alert alert-danger">E-mail não encontrado.</div>';
-        }
-        $stmt->close();
-        $conn->close();
+  // Pega os dados do formulário e remove espaços extras
+  $email = trim($_POST['email'] ?? '');
+  $senha = $_POST['senha'] ?? '';
+  // Verifica se todos os campos foram preenchidos
+  if ($email && $senha) {
+    $conn = conectarBanco();
+    // Prepara a consulta para buscar o usuário pelo e-mail
+    $stmt = $conn->prepare("SELECT id, nome, senha FROM usuarios WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    // Se encontrou o usuário, verifica a senha
+    if ($stmt->num_rows === 1) {
+      $stmt->bind_result($id, $nome, $senhaHash);
+      $stmt->fetch();
+      // Verifica se a senha está correta
+      if (password_verify($senha, $senhaHash)) {
+        // Salva os dados do usuário na sessão e redireciona para a home
+        $_SESSION['usuario_id'] = $id;
+        $_SESSION['usuario_nome'] = $nome;
+        header("Location: /trabalho-facul-catalogo/app/auth/home.php");
+        exit;
+      } else {
+        // Senha incorreta
+        $mensagem = '<div class="alert alert-danger">Senha incorreta.</div>';
+      }
     } else {
-        $mensagem = '<div class="alert alert-warning">Preencha todos os campos.</div>';
+      // E-mail não encontrado
+      $mensagem = '<div class="alert alert-danger">E-mail não encontrado.</div>';
     }
+    $stmt->close();
+    $conn->close();
+  } else {
+    // Se algum campo não foi preenchido, mostra aviso
+    $mensagem = '<div class="alert alert-warning">Preencha todos os campos.</div>';
+  }
 }
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Porter Stranding</title>
+  <!-- Importa o Bootstrap e o CSS customizado -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="/trabalho-facul-catalogo/assets/css/style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/trabalho-facul-catalogo/assets/js/script.js"></script>
 </head>
+
 <body>
   <!-- Barra superior igual à home -->
   <div class="bg-light p-5 mb-4">
@@ -63,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
   </div>
   <!-- Formulário centralizado -->
-  <div class="container d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+  <div class="container d-flex justify-content-center align-items-center min-vh-60">
     <div class="card p-4 shadow" style="max-width: 400px; width: 100%;">
       <h2 class="mb-3 text-center">Entrar</h2>
       <?php echo $mensagem; ?>
@@ -85,7 +93,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   </div>
   <!-- Rodapé -->
   <footer class="bg-primary text-white text-center py-3 mt-5">
-    <div class="container">&copy; 2025 Porter Stranding. Todos os direitos reservados.</div>
+    <div class="container">&copy; 2025 Porter Stranding.</div>
   </footer>
 </body>
+
 </html>

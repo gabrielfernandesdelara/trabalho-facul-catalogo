@@ -1,57 +1,61 @@
 <?php
+// Inicia a sessão para manter o login do usuário
 require_once __DIR__ . '/../../banco/connect.php';
-
+// Variável para mensagem de retorno
 $mensagem = "";
-
+// Verifica se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $nome = trim($_POST['nome'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $senha = $_POST['senha'] ?? '';
-
-    if ($nome && $email && $senha) {
-        $conn = conectarBanco();
-
-        // Verifica se o e-mail já está cadastrado
-        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            $mensagem = '<div class="alert alert-danger">E-mail já cadastrado.</div>';
-        } else {
-            // Criptografa a senha
-            $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-
-            $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)");
-            $stmt->bind_param("sss", $nome, $email, $senhaHash);
-
-            if ($stmt->execute()) {
-                $mensagem = '<div class="alert alert-success">Usuário cadastrado com sucesso! <a href="login.php" class="alert-link">Faça login</a>.</div>';
-            } else {
-                $mensagem = '<div class="alert alert-danger">Erro ao cadastrar usuário.</div>';
-            }
-        }
-        $stmt->close();
-        $conn->close();
+  // Pega os dados do formulário e remove espaços extras
+  $nome = trim($_POST['nome'] ?? '');
+  $email = trim($_POST['email'] ?? '');
+  $senha = $_POST['senha'] ?? '';
+  // Verifica se todos os campos foram preenchidos
+  if ($nome && $email && $senha) {
+    $conn = conectarBanco();
+    // Verifica se o e-mail já está cadastrado no banco
+    $stmt = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    // Se já existe, mostra mensagem de erro
+    if ($stmt->num_rows > 0) {
+      $mensagem = '<div class="alert alert-danger">E-mail já cadastrado.</div>';
     } else {
-        $mensagem = '<div class="alert alert-warning">Preencha todos os campos.</div>';
+      // Criptografa a senha antes de salvar
+      $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+      // Insere o novo usuário no banco de dados
+      $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)");
+      $stmt->bind_param("sss", $nome, $email, $senhaHash);
+      // Verifica se cadastrou com sucesso
+      if ($stmt->execute()) {
+        $mensagem = '<div class="alert alert-success">Usuário cadastrado com sucesso! <a href="login.php" class="alert-link">Faça login</a>.</div>';
+      } else {
+        $mensagem = '<div class="alert alert-danger">Erro ao cadastrar usuário.</div>';
+      }
     }
+    $stmt->close();
+    $conn->close();
+  } else {
+    // Se algum campo não foi preenchido, mostra aviso
+    $mensagem = '<div class="alert alert-warning">Preencha todos os campos.</div>';
+  }
 }
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registro - Porter Stranding</title>
+  <!-- Importa o Bootstrap e o CSS customizado -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="/trabalho-facul-catalogo/assets/css/style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/trabalho-facul-catalogo/assets/js/script.js"></script>
 </head>
+
 <body>
-  <!-- Barra superior igual à home -->
+  <!-- Banner superior com logo e título -->
   <div class="bg-light p-5 mb-4">
     <div class="container">
       <div class="d-flex align-items-center justify-content-between flex-wrap">
@@ -63,8 +67,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       </div>
     </div>
   </div>
-  <!-- Formulário centralizado -->
-  <div class="container d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+  <!-- Formulário centralizado para cadastro -->
+  <div class="container d-flex justify-content-center align-items-center min-vh-60">
     <div class="card p-4 shadow" style="max-width: 400px; width: 100%;">
       <h2 class="mb-3 text-center">Criar Conta</h2>
       <?php echo $mensagem; ?>
@@ -88,9 +92,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       </form>
     </div>
   </div>
-  <!-- Rodapé -->
+  <!-- Rodapé da página -->
   <footer class="bg-primary text-white text-center py-3 mt-5">
     <div class="container">&copy; 2025 Porter Stranding.</div>
   </footer>
 </body>
+
 </html>
