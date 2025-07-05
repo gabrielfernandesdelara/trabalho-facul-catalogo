@@ -1,0 +1,1 @@
+<!-- para conectar as credencias do banco de dados, para não colocar dentro do codigo -->
