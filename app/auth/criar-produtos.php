@@ -2,6 +2,7 @@
 // Inicia a sessão para manter o login do usuário
 session_start();
 require_once __DIR__ . '/../../banco/connect.php';
+require_once __DIR__ . '/../../banco/verificar-login.php';
 // Pega o nome do usuário logado, se houver
 $usuario_nome = $_SESSION['usuario_nome'] ?? '';
 $conn = conectarBanco();
@@ -156,8 +157,9 @@ $conn->close();
         <img src="/trabalho-facul-catalogo/assets/img/Icon.png" alt="Banner" class="banner-img" />
       </div>
       <?php if ($usuario_nome): ?>
-        <div class="position-absolute top-0 end-0 mt-3 me-4">
-          <span class="badge bg-primary fs-6 p-2">👤 <?php echo htmlspecialchars($usuario_nome); ?></span>
+        <div class="position-absolute top-0 end-0 mt-3 me-4 d-flex align-items-center gap-2">
+          <span class="usuario-nome badge bg-primary fs-6 p-2">👤 <?php echo htmlspecialchars($usuario_nome); ?></span>
+          <a href="/trabalho-facul-catalogo/app/public/logout.php" class="logout-link ms-2">Sair</a>
         </div>
       <?php endif; ?>
     </div>

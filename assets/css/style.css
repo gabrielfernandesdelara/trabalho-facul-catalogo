@@ -176,6 +176,44 @@ footer .container {
   color: #fff !important;
 }
 
+/* Estilo do nome do usuário no topo */
+.usuario-nome {
+  background: linear-gradient(90deg, #3a0ca3 60%, #7209b7 100%) !important;
+  color: #fff !important;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 0.5em 1.3em;
+  margin-right: 0.5em;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(114, 9, 183, 0.08);
+  display: inline-block;
+}
+
+/* Estilo do link de logout para ficar parecido com o nome do usuário */
+.logout-link {
+  background: linear-gradient(90deg, #7209b7 0%, #f72585 100%);
+  color: #fff !important;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 0.5em 1.3em;
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  box-shadow: 0 2px 8px rgba(247, 37, 133, 0.08);
+  margin-left: 0.2em;
+  display: inline-block;
+}
+
+.logout-link:hover,
+.logout-link:focus {
+  background: linear-gradient(90deg, #f72585 0%, #7209b7 100%);
+  color: #fff !important;
+  text-decoration: none;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 16px rgba(247, 37, 133, 0.15);
+}
+
 /* Responsividade para imagens e cards */
 @media (max-width: 767px) {
   .card-img-top {
